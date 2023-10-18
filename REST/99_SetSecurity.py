@@ -1,7 +1,8 @@
 import keyring
-from Settings import PortalUrl, Username
+import Settings
 
 print("Setting password for: {}")
 pwd = input("Enter the password:")
 
-print("Successfully saved password for {Username}") 
+keyring.set_password(Settings.KeyringKeyword, Settings.Username, pwd)
+print(f"Successfully saved password for {Settings.Username}") 
