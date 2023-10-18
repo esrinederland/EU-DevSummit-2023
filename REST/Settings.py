@@ -31,7 +31,7 @@ def GenerateToken():
     tokenExpires = datetime.datetime.fromtimestamp(int(expires)/1000)
 
     print("new token: {}".format(token))
-    print("token for {} expires: {}".format(GetUsername(),tokenExpires))
+    print(f"token for {Username} expires: {tokenExpires}")
     return token
 
 
