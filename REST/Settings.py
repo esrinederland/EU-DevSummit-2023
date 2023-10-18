@@ -8,6 +8,8 @@ KeyringKeyword = "EUDevSummit2023_REST"
 Username = "devteamesrinl"
 if socket.getfqdn() == "ESRIBX0814.esrinl.com":
     Username = "mvanhulzen_esrinl_events"
+if socket.getfqdn() == "ESRIBX0777.esrinl.com":
+    Username = "mholtslag_esrinl_events"
 
 def GetPassword():
     pwd = keyring.get_password(KeyringKeyword, Username)
