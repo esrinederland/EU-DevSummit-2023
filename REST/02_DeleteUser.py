@@ -54,3 +54,5 @@ print("Deleting user")
 deleteResponse = requests.post(deleteUserUrl).json()
 if "success" in deleteResponse and deleteResponse["success"]:
     print(f"Successfully deleted user '{deleteResponse['username']}'")
+
+print("Script complete")
