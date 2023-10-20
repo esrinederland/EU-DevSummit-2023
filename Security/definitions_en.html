@@ -1,0 +1,289 @@
+<!-- 
+CSS ONLY – ACCORDION COMPONENT
+VIEW THE REPO: https://github.com/night-shift-studio/nss-components
+
+AUTHOR: NIGHT SHIFT STUDIO
+
+NOTES:
+INSPIRED BY & REWORKED FROM 
+VANILLA CSS COLLAPSABLE DRAWERS: https://codepen.io/builtbyluke/pen/dBVVQR 
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+<script>
+    var b = document.documentElement;
+    b.setAttribute('data-useragent',  navigator.userAgent);
+    b.setAttribute('data-platform', navigator.platform);
+    b.className += ((!!('ontouchstart' in window) || !!('onmsgesturechange' in window))?' touch':'');
+</script>
+<style>
+      h1 {
+          font-size: 1em;
+      }
+
+      .faq-drawer__content-wrapper {
+          font-size: 0.75em;
+      }
+
+      .faq-drawer__title {
+          font-size: 0.75em;
+      }
+
+      .container {
+          padding: 50px;
+      }
+
+    html[data-useragent*='Android'] h1 {
+            font-size: 3em;
+    }
+    html[data-useragent*='Android'] .faq-drawer__content-wrapper {
+        font-size: 2.2em;
+    }
+    html[data-useragent*='Android'] .faq-drawer__title {
+        font-size: 2.0em;
+        color: #072743;
+    }
+    html[data-useragent*='Android'] .container {
+        padding: 30px;
+    }
+    
+    html[data-useragent*='iPhone'] h1 {
+            font-size: 3em;
+    }
+    html[data-useragent*='iPhone'] .faq-drawer__content-wrapper {
+        font-size: 2.2em;
+    }
+    html[data-useragent*='iPhone'] .faq-drawer__title {
+        font-size: 2.0em;
+        color: #072743;
+    }
+    html[data-useragent*='iPhone'] .container {
+        padding: 30px;
+    }
+
+    body {
+    background-color: #FFF8F2;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    }
+
+    .faq-drawer {
+    margin-bottom: 30px;
+    }
+
+    .faq-drawer__content-wrapper {
+    line-height: 1.4em;
+    max-height: 0px;
+    overflow: hidden;
+    transition: 0.25s ease-in-out;
+    }
+
+    .faq-drawer__title {
+    border-top: #000 1px solid;
+    cursor: pointer;
+    display: block;
+    font-weight: 700;
+    padding: 30px 0 0 0;
+    position: relative;
+    margin-bottom: 0;
+    transition: all 0.25s ease-out;
+    }
+
+    .faq-drawer__title::after {
+    border-style: solid;
+    border-width: 1px 1px 0 0;
+    content: " ";
+    display: inline-block;
+    float: right;
+    height: 10px;
+    left: 2px;
+    position: relative;
+    right: 20px;
+    top: 2px;
+    transform: rotate(135deg);
+    transition: 0.35s ease-in-out;
+    vertical-align: top;
+    width: 10px;
+    }
+
+    /* OPTIONAL HOVER STATE */
+    .faq-drawer__title:hover { 
+    color: #4E4B52  ;
+    }
+
+    .faq-drawer__trigger:checked
+    + .faq-drawer__title
+    + .faq-drawer__content-wrapper {
+    max-height: 450px;
+    }
+
+    .faq-drawer__trigger:checked + .faq-drawer__title::after {
+    transform: rotate(-45deg);
+    transition: 0.25s ease-in-out;
+    }
+
+    input[type="checkbox"] {
+    display: none;
+    }
+
+</style>
+</head>
+<body>
+  
+  <div class="container">
+    
+    <h1>Security definitions</h1>
+    
+    <div class="faq-drawer">
+      <input class="faq-drawer__trigger" id="faq-drawer" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer">Identity Provider</label>
+      <div class="faq-drawer__content-wrapper">
+        <div class="faq-drawer__content">
+          <p>
+            An identity provider (IdP) is a system that creates, stores and manages digital identities. Simply stated, an IdP is user authentication as-a-service.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="faq-drawer">
+      <input class="faq-drawer__trigger" id="faq-drawer-2" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-2">SAML</label>
+      <div class="faq-drawer__content-wrapper">
+        <div class="faq-drawer__content">
+          <p>
+            Security Assertion Markup Language: a protocol for exchanging authentication and authorization information between an identity provider and a third party application.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="faq-drawer">
+      <input class="faq-drawer__trigger" id="faq-drawer-3" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-3">Authenticatie</label>
+      <div class="faq-drawer__content-wrapper">
+        <div class="faq-drawer__content">
+          <p>
+            The answer to the question: who are you?
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-4" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-4">Autorisatie</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                The answer to the question: what are you allowed to do? Even possible without authentication, because in some cases an anonymous user can also access certain data and/or services.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-5" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-5">Token</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                A string that contains encrypted authentication data. As long as a token is valid, users will have access to a website or app for which the token has been created.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-6" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-6">OAuth</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Open Authorization: an open standard for authorization. Users can use this to grant an application access to their data, which is stored in another website, without exposing the username and password.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-7" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-7">OpenID</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                A protocol to exchange authentication and authorization data between an identity provider and a third party application.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-8" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-8">MFA</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Multi Factor Authentication: an authentication method that forces an online user to complete two steps to gain access to something.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-9" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-9">IWA</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Integrated Windows Authentication: ge&iuml;ntegreerde Windows-verificatie maakt gebruik van de beveiligingsfuncties van Windows-clients en -servers. In tegenstelling tot basisauthenticatie of samenvattingsauthenticatie, wordt gebruikers in eerste instantie niet om een gebruikersnaam en wachtwoord gevraagd.
+                Integrated Windows Authentication: integrated Windows verification uses Windows client and server security functionality. Unlike basic or ... authentication, users are not asked for a password at first hand.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-10" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-10">AD</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Active Directory: and authentication and authorization service provided by Microsoft. In this context mainly used as a identity provider.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-11" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-11">SSO</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Single Signon: authenticating without again having to enter a username and password.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-12" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-12">WWF</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                World Wildlife Foundation: a global organization dedicated to protecting nature. The giant panda is the organization symbol.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-drawer">
+        <input class="faq-drawer__trigger" id="faq-drawer-13" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer-13">RickRolling</label>
+        <div class="faq-drawer__content-wrapper">
+          <div class="faq-drawer__content">
+            <p>
+                Rickrolling or a Rickroll: an internet meme involving the unexpected appearance of the music video for the 1987 song "Never Gonna Give You Up". The meme is a type of bait and switch, usually using a disguised hyperlink that leads to the music video. When victims click on a seemingly unrelated link, the site with the music video loads instead of what was expected, and they have been "Rickrolled".
+            </p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+</body>
+
+</html>

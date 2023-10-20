@@ -1,0 +1,198 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      getGroupies
+    </title>
+
+    <script src="https://js.arcgis.com/calcite-components/1.2.0/calcite.esm.js" type="module"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/1.2.0/calcite.css" />
+
+    <style>
+      html,
+      body,
+
+      #container {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      .container {
+        padding: 1em;
+      }
+
+      #portalName {
+        width: 200px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      #btnQuery {
+        overflow: auto;
+        text-align: center;
+        cursor: pointer;
+        font-size: 1em;
+        width: 100px;
+        height: 32px;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+
+      #tokenInput {
+        width: 75%;
+        float: left;
+        margin-top: 10px;
+      }
+
+      .action {
+        color: blue;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.25/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.25/"></script>
+  </head>
+
+  <body>
+    <div id="anonymousPanel" style="display: none; padding: 5px; text-align: center;">
+      <span id="sign-in" class="action">Sign In</span> and view your ArcGIS Online items.
+    </div>
+
+    <div id="personalizedPanel" style="display: none; padding: 5px; text-align: center;">
+      Welcome <span id="userId" style="font-weight: bold;"></span> &nbsp;-&nbsp;
+      <span id="sign-out" class="action">Sign Out</span>
+    </div>
+
+    <div class="container esri-widget">
+      <div>
+        Portal:
+        <calcite-combobox id="portalName" selection-mode="single">
+          <calcite-combobox-item value="mvanhulzenportal" text-label="mvanhulzenportal" selected></calcite-combobox-item>
+          <calcite-combobox-item value="mjagtportal" text-label="mjagtportal"></calcite-combobox-item>
+        </calcite-combobox>
+      </div>
+      <div>
+        Token: <br>
+        <calcite-input id="tokenInput"></calcite-input>
+        <calcite-button id="btnQuery">Get Groups</calcite-button>
+      </div>
+      <pre id="resultsDiv"></pre>
+    </div>
+
+    <script>
+      require([
+        "esri/request",
+        "esri/portal/Portal",
+        "esri/identity/OAuthInfo",
+        "esri/identity/IdentityManager",
+        "esri/portal/PortalQueryParams"
+        ], function (esriRequest, Portal, OAuthInfo, esriId, PortalQueryParams) {
+        const resultsDiv = document.getElementById("resultsDiv");
+        const tokenInput = document.getElementById("tokenInput");
+        const portalName = document.getElementById("portalName");
+
+        const personalPanelElement = document.getElementById("personalizedPanel");
+        const anonPanelElement = document.getElementById("anonymousPanel");
+        const userIdElement = document.getElementById("userId");
+
+        
+        const info = new OAuthInfo({
+          // Swap this ID out with registered application ID
+          appId: "SWV84jqufujzTid8",
+          // Uncomment the next line and update if using your own portal
+          // portalUrl: "https://<host>:<port>/arcgis"
+          // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
+          // authNamespace: "portal_oauth_inline",
+          flowType: "auto", // default that uses two-step flow
+          popup: false
+        });
+        esriId.registerOAuthInfos([info]);
+
+        esriId
+          .checkSignInStatus(info.portalUrl + "/sharing")
+          .then(() => {
+            setToken();
+          })
+          .catch(() => {
+            // Anonymous view
+            anonPanelElement.style.display = "block";
+            personalPanelElement.style.display = "none";
+          });
+        
+        document.getElementById("sign-in").addEventListener("click", () => {
+          // user will be redirected to OAuth sign-in page
+          esriId.getCredential((info.portalUrl + "/sharing"), {
+            oAuthPopupConfirmation: false
+          }).then(function() {
+            setToken();
+          });
+        });
+
+        document.getElementById("sign-out").addEventListener("click", () => {
+          esriId.destroyCredentials();
+          window.location.reload();
+        });
+
+        tokenInput.addEventListener("focus", () => {
+          tokenInput.value = "";
+        });
+        
+        function setToken() {
+          const portal = new Portal();
+          // Setting authMode to immediate signs the user in once loaded
+          portal.authMode = "immediate";
+          // Once loaded, user is signed in
+          portal.load().then(() => {
+            console.log("Portal: ", portal);
+            tokenInput.value = portal.credential.token;
+
+            userIdElement.innerHTML = portal.user.username;
+            anonPanelElement.style.display = "none";
+            personalPanelElement.style.display = "block";
+          });
+        }
+
+        // Make the request on a button click
+        btnQuery.addEventListener("click", function () {
+          const url = "https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups";
+        // Define the 'options' for the request
+        const options = {
+          query: {
+            f: "json",
+            q: 'owner:mjagtPortal AND tags:ShowMeTheGroupies',
+            num: 100,
+            token: tokenInput.value
+          },
+          method: "post",
+          responseType: "json"
+        };
+        
+          resultsDiv.innerHTML = "<div style='display:table;'><div style='display:table-row;'>";
+          esriRequest(url, options).then(function (response) {
+            console.log("response", response);
+            for (const group of response.data.results){
+            resultsDiv.innerHTML += "<div style='display:table-column;float:left;width:200px;height:200px'>" + 
+                                    "<img src='https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups/" + group.id + "/info/" + group.thumbnail + "?token=" + tokenInput.value + "'></img>" + 
+                                    "<h2>" + group.title + "</h2>" + group.description + "</div>"
+          }
+          resultsDiv.innerHTML += "</div></div>";
+          }).catch(function(response) {
+            console.log("Big error: ", response);
+            resultsDiv.innerHTML = response.message;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
