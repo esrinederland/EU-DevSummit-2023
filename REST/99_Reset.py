@@ -8,7 +8,8 @@ def main():
     #delete group
     RemoveGroups(token)
 
-    #create user
+    #create user and reassign items
+    createUserAndReassignItems(token)
 
     #add content
 
@@ -91,7 +92,7 @@ def searchPortalItems(wherestring, token, start=1):
 
 def createUserAndReassignItems(token):
     ## User settings
-    inviteParams = {"invitationList":{"invitations":[{"email":"mholtslag@esri.nl","firstname":"Intern","lastname":"No longer working for us","username":"intern_esrinl_events","password":"intern_esrinl_events0","role":"xFfw0BwQVw0N6Yj4","userLicenseType":"creatorUT","fullname":"Intern No longer working for us","userType":"arcgisonly","groups":"","userCreditAssignment":500,"applyActUserDefaults":False}]}}
+    inviteParams = {"invitationList":'{"invitations":[{"email":"mholtslag@esri.nl","firstname":"Student","lastname":"Intern","username":"intern_esrinl_events","password":"intern_esrinl_events0","role":"xFfw0BwQVw0N6Yj4","userLicenseType":"creatorUT","fullname":"Student Intern","userType":"arcgisonly","groups":"","userCreditAssignment":500,"applyActUserDefaults":False}]}'}
     inviteUrl = f"https://www.arcgis.com/sharing/rest/portals/self/invite?f=json&token={token}"
 
     r = requests.post(inviteUrl, inviteParams)

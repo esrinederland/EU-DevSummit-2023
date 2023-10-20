@@ -6,9 +6,10 @@ print("Getting token")
 token = Settings.GenerateToken()
 
 ## SETTINGS
-userToDelete = ""
-targetUser = ""
-userUrl = f"https://www.arcgis.com/sharing/rest/content/users/{userToDelete}/"
+userToDelete = "intern_esrinl_events"
+targetUser = "archief_esrinl_events"
+userContentUrl = f"https://www.arcgis.com/sharing/rest/content/users/{userToDelete}"
+userCommunityUrl = f"https://www.arcgis.com/sharing/rest/community/users/{userToDelete}"
 
 ## Get content for user
 contentParams = {
@@ -21,14 +22,14 @@ print("Retrieving items")
 contentResponse = requests.get(contentUrl, contentParams).json()
 print(f"{contentResponse['total']} items found")
 
-itemIDs = ",".join([item["id"] for item in r["results"]])
+itemIDs = ",".join([item["id"] for item in contentResponse["results"]])
 
 ## Check if items can be reassigned
 reassignParams = {
     "items": itemIDs,
     "targetUsername": targetUser
 }
-checkUrl = f"{userUrl}/canReassignItems?f=json&token={token}"
+checkUrl = f"{userContentUrl}/canReassignItems?f=json&token={token}"
 
 print("Checking reassign items")
 checkResponse = requests.post(checkUrl, reassignParams).json()
@@ -39,17 +40,17 @@ successIDs = ",".join(successIDList)
 
 ## Reassign items
 reassignParams["items"] = successIDs
-reassignUrl = f"{userUrl}/reassignItems?f=json&token={token}"
+reassignUrl = f"{userContentUrl}/reassignItems?f=json&token={token}"
 
 print("Reassigning items")
 reassignResponse = requests.post(reassignUrl, reassignParams).json()
 successCount = len([result["itemId"] for result in reassignResponse["results"] if result["success"]])
-print(f"Reassigned {successCount} items")
+print(f"Successfully reassigned {successCount} items to '{targetUser}'")
 
 ## Delete User
-deleteUserUrl = f"{userUrl}/delete?f=json&token={token}"
+deleteUserUrl = f"{userCommunityUrl}/delete?f=json&token={token}"
 
 print("Deleting user")
 deleteResponse = requests.post(deleteUserUrl).json()
-if deleteResponse["success"]:
-    print(f"Successfully deleted user {deleteResponse['username']}")
+if "success" in deleteResponse and deleteResponse["success"]:
+    print(f"Successfully deleted user '{deleteResponse['username']}'")
