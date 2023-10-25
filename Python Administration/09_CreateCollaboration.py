@@ -29,3 +29,5 @@ if collaborationCreated:
     # Share a list of Items with the collaboration group
     items = ["aacd190707e94fc285215b77f35427a5"]
     sharedItems = gisEnterprise.content.share_items(items, groups=[collaborationGroupID])
+
+print("Script complete")

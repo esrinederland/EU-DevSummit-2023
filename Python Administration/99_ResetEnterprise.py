@@ -47,4 +47,16 @@ for item in itemsToRemove:
     result = item.delete()
     print(f"deleteresult: {result}")
 
+# Delete collaboration
+collaborationName = "EsriNL Events + EsriNL DevTeam"
+
+# Delete collaboration group and content
+collaborationGroups = gis.groups.search(query=collaborationName)
+for collaborationGroup in collaborationGroups:
+    print(f"Deleting group: {collaborationGroup.title}")
+    collaborationGroup.delete()
+
+# Delete collaboration folder for user
+gis.content.delete_folder(f"collab_{collaborationName}")
+
 print("Script complete")
