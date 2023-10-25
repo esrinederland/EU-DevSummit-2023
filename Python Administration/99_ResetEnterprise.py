@@ -47,25 +47,4 @@ for item in itemsToRemove:
     result = item.delete()
     print(f"deleteresult: {result}")
 
-print("Starting sampleworldcities")
-print("Getting admin")
-admin = gis.admin
-
-print("Getting serverManager")
-serverManager = admin.servers
-
-print("getting hosting server")
-gis_server = serverManager.get("HOSTING_SERVER")[0]
-
-print("Getting services manager")
-servicesManager = gis_server.services
-swcService = [serv for serv in servicesManager.list() if serv.properties.serviceName =="SampleWorldCities"][0]
-
-print(f"Service status: {swcService.status}")
-
-print("Start Service")
-swcService.start()
-
-print(f"Service status: {swcService.status}")
-
 print("Script complete")
