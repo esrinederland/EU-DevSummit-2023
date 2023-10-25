@@ -12,7 +12,7 @@ print("Update license type:")
 newUser.update_license_type("Creator")
 
 # SET A NEW ROLE NAME
-newRoleName = "DevDay DemoRole"
+newRoleName = "DevSummit DemoRole"
 print("Searching for role id")
 for role in gis.users.roles.all():
     if role.name==newRoleName:

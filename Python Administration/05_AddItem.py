@@ -17,7 +17,7 @@ title = os.path.splitext(fileName)[0]
 itemProperties={'type':fileType,
                 'title':title,
                 'description':'CSV file with earthquake information',
-                'tags':'python, csv, earthquakes, DevDay2023'}
+                'tags':'python, csv, earthquakes, DevSummit2023'}
 
 addedItem = gis.content.add(item_properties=itemProperties, data=filePath)
 print(f"The item '{fileName}' was added to your portal with itemID: '{addedItem.itemid}'")
@@ -29,7 +29,7 @@ print(f"Icon Update result: {updatedItemSucceeded}")
 
 
 # SHARE WITH GROUP
-groupsToShareWith = gis.groups.search(query='tags:DevDay2023')
+groupsToShareWith = gis.groups.search(query='tags:DevSummit2023')
 
 share = addedItem.share(groups=groupsToShareWith)
 if share['results'][0]['success']:
@@ -37,25 +37,28 @@ if share['results'][0]['success']:
 else:
     print("Something went wrong while sharing the item.")
 
-# CREATE WEBMAP
-print("Creating a webmap")
-wm = arcgis.mapping.WebMap()  # new web map
+# PUBLISH AS FEATURE SERVICE
+publisheditem = addedItem.publish(overwrite=True, file_type="csv")
 
-wm.basemap = "streets-night-vector"
+# # CREATE WEBMAP
+# print("Creating a webmap")
+# wm = arcgis.mapping.WebMap()  # new web map
 
-layer = gis.content.get("96cbbfd990844b78a3150313ea9971d6").layers[0]
-wm.add_layer(layer)  # add some layers
+# wm.basemap = "streets-night-vector"
+
+# layer = gis.content.get("96cbbfd990844b78a3150313ea9971d6").layers[0]
+# wm.add_layer(layer)  # add some layers
 
 
-# SAVE THE WEBMAP
-webmap_item_properties = {'title':'DevDay Created Webmap',
-             'snippet':'Map created using Python API',
-             'tags':['automation', 'python', "DevDay2023"],
-             'extent': {'xmin': -17, 'ymin': 42, 'xmax': 39, 'ymax': 59, 'spatialReference': {'wkid': 4326}}}
+# # SAVE THE WEBMAP
+# webmap_item_properties = {'title':'DevSummit Created Webmap',
+#              'snippet':'Map created using Python API',
+#              'tags':['automation', 'python', "DevSummit2023"],
+#              'extent': {'xmin': -17, 'ymin': 42, 'xmax': 39, 'ymax': 59, 'spatialReference': {'wkid': 4326}}}
 
-print("Saving the webmap")
-new_wm_item = wm.save(webmap_item_properties, thumbnail=r'D:\Data\WebMap_Icon.jpg')
-print(f"Created item with id: {new_wm_item.id}")
+# print("Saving the webmap")
+# new_wm_item = wm.save(webmap_item_properties, thumbnail=r'D:\Data\WebMap_Icon.jpg')
+# print(f"Created item with id: {new_wm_item.id}")
 
 
 print("Script complete")
