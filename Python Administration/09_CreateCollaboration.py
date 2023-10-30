@@ -15,7 +15,6 @@ collaborationDescription = "Data sharing initiative between EsriNL Events and Es
 
 # Create collaboration
 collaborationCreated = gisAgol.admin.collaborations.collaborate_with(gisEnterprise, collaborationName, collaborationDescription)
-print(collaborationCreated)
 
 if collaborationCreated:
     
