@@ -27,4 +27,13 @@ if len(collaborations) > 0:
     print(f"Deleting collaboration {collaboration.name}")
     res = collaboration.delete()
 
+#remove created items:
+print("Searching for items")
+itemsToRemove = gis.content.search(query='tags:"DevSummit2023"',max_items=1000)
+print(f"found: {len(itemsToRemove)}")
+for item in itemsToRemove:
+    print(f"Start deleting item: {item.title} , {item.type} ({item.id})")
+    result = item.delete()
+    print(f"deleteresult: {result}")
+
 print("Script complete")

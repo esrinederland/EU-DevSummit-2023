@@ -1,14 +1,29 @@
 import arcgis
-from Settings import PortalUrl,ProfileName
+from Settings import PortalUrl,ProfileName, AgolUrl, AgolProfileName
 import os
 
 print("Getting GIS")
-gis = arcgis.GIS(PortalUrl, profile=ProfileName)
+gis = arcgis.GIS(AgolUrl, profile=AgolProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username)) 
 
-# UPDATE ITEM
+# GET THE LAYER TO UPDATE
+layer = gis.content.get("5da9f6e8810741d7859491c32f1b46be").layers[0]
+
+# ADD UNIQUE INDEX TO 'id' FIELD
+matchingField = "id"
+fieldIDX = {
+    "name": "c_id",
+    "fields": matchingField,
+    "isAscending": True,
+    "isUnique": True,
+    "description": "index_id"
+    }
+layer.manager.add_to_definition({"indexes": [fieldIDX]})
+print(f"Added unique index to field '{matchingField}'")
+
+# UPDATE ITEM FROM CSV
 fileFolder = r"D:\Data"
-fileName = "earthquakes_year.csv"
+fileName = "earthquakes_5.5.csv"
 fileType = "CSV"
 
 filePath = os.path.join(fileFolder, fileName)
@@ -18,12 +33,19 @@ itemProperties={'type':fileType,
                 'description':'CSV file with earthquake information',
                 'tags':'python, csv, earthquakes, DevSummit2023'}
 
-# GET THE LAYER TO UPDATE
-layer = gis.content.get("96cbbfd990844b78a3150313ea9971d6").layers[0]
+csvItem = gis.content.add(item_properties=itemProperties, data=filePath)
+print(f"The item '{fileName}' was added to your portal with itemID: '{csvItem.itemid}'")
 
-addedItem = gis.content.add(item_properties=itemProperties, data=filePath)
-print(f"The item '{fileName}' was added to your portal with itemID: '{addedItem.itemid}'")
+csvInfo = gis.content.analyze(item=csvItem.itemid, file_type="csv", location_type="coordinates")
 
-
+print(f"BEFORE APPEND: Layer contains {layer.query(return_count_only=True)} features")
+layer.append(
+    item_id=csvItem.itemid,
+    upload_format="csv",
+    source_info=csvInfo['publishParameters'],
+    upsert=True,
+    upsert_matching_field=matchingField
+    )
+print(f"AFTER APPEND: Layer contains {layer.query(return_count_only=True)} features")
 
 print("Script complete")
