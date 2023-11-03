@@ -1,3 +1,5 @@
+##### ARCGIS ENTERPRISE #####
+
 import arcgis
 from Settings import PortalUrl,ProfileName
 import datetime
@@ -19,7 +21,9 @@ print(f"Home page title updated to {newTitle}")
 # CHANGE HOMEPAGE BACKGROUND
 filename = Path(r'D:\Data\background.jpg')
 if filename.exists():
-    print(ux.homepage_settings.set_background(background_file=filename))
+    ux.homepage_settings.set_background(
+        background_file=filename
+        )
 else:
     print("file does not exist!")
 
@@ -28,6 +32,9 @@ editDatTime = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 ux.name = f"Our Fabulous portal {editDatTime}"
 
 # SET INFORMATINONAL BANNER
-ux.security_settings.set_informational_banner(text=f"Information: This Portal's look and feel was updated on {editDatTime}", bg_color="white", enabled=True)
+ux.security_settings.set_informational_banner(
+    text=f"Information: This Portal's look and feel was updated on {editDatTime}", 
+    bg_color="white", 
+    enabled=True)
 
 print("Script complete")

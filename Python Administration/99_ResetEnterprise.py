@@ -16,6 +16,9 @@ filename = r'D:\Data\background_default.png'
 gis.admin.ux.homepage_settings.set_background(filename)
 print(f"Home page background updated")
 
+# RESET INFORMATINONAL BANNER
+gis.admin.ux.security_settings.set_informational_banner(text="", enabled=False)
+
 # Change portal title
 gis.admin.ux.name = f"EsriNL DevTeam ArcGIS Enterprise"
 
@@ -49,6 +52,11 @@ for item in itemsToRemove:
 
 # Delete collaboration
 collaborationName = "EsriNL Events + EsriNL DevTeam"
+collaborations = [collab for collab in gis.admin.collaborations.list() if collaborationName in collab.name]
+for collaboration in collaborations:
+    # Delete collaboration
+    print(f"Deleting collaboration {collaboration.name}")
+    res = collaboration.remove_participation()
 
 # Delete collaboration group and content
 collaborationGroups = gis.groups.search(query=collaborationName)

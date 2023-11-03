@@ -1,3 +1,5 @@
+##### ARCGIS ENTERPRISE #####
+
 import arcgis
 from Settings import PortalUrl,ProfileName
 
@@ -18,11 +20,17 @@ roleId = "iAAAAAAAAAAAAAAA" #defaults to viewer role
 
 # CREATE THE USER
 print("Creating user")
-newUser = gis.users.create(NewUsername, PassWord, FirstName, LastName, EmailAddress, UserDesc, role=roleId, user_type = UserType)
+newUser = gis.users.create(
+    username=NewUsername, 
+    password=PassWord, 
+    firstname=FirstName, 
+    lastname=LastName, 
+    email=EmailAddress, 
+    description=UserDesc, 
+    role=roleId, 
+    user_type = UserType,
+    thumbnail=UserImage
+    )
 print(newUser)
-
-# UPDATE THE USER THUMBNAIL
-print("Updating user thumbnail")
-newUser.update(thumbnail = UserImage)
 
 print("Script complete")

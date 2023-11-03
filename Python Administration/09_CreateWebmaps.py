@@ -40,7 +40,7 @@ for unique in uniqueValues:
                 'tags':['automation', 'python', "DevSummit2023"]}
 
     print("Saving the webmap")
-    new_wm_item = wm.save(webmap_item_properties, thumbnail=r'D:\Data\WebMap_Icon.jpg')
+    new_wm_item = wm.save(webmap_item_properties, thumbnail=r'D:\Data\WebMap_Icon.png')
     print(f"Created item with id: {new_wm_item.id}")
 
 print("Script complete")

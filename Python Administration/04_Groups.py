@@ -1,42 +1,43 @@
+##### ARCGIS ONLINE #####
+
 import arcgis
-from Settings import PortalUrl,ProfileName
+from Settings import AgolUrl,AgolProfileName
 
 print("Getting GIS")
-gis = arcgis.GIS(PortalUrl, profile=ProfileName)
+gis = arcgis.GIS(AgolUrl, profile=AgolProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username)) 
 
 # CREATE A NEW GROUP
 GroupTitle = "Doomed To Stay"
 GroupDescription = "This is a group created for the 2023 DevSummit. The word is: DevSummit"
 GroupTags = "DevSummit2023, Demo, NoLeaving"
+GroupIconPath = r"D:\Data\Group_Image.png"
 
-foundGroups = gis.groups.search(f'title:{GroupTitle}')
-if len(foundGroups) > 0:
-    newGroup = foundGroups[0]
-else:
-    newGroup = gis.groups.create(title=GroupTitle, description=GroupDescription, tags=GroupTags, access='private', max_file_size=500000 , leaving_disallowed=True)
-    print(f"Group '{newGroup.title}' created!")
+newGroup = gis.groups.create(
+    title=GroupTitle, 
+    description=GroupDescription, 
+    tags=GroupTags, 
+    access='private',
+    max_file_size=500000 , 
+    leaving_disallowed=True,
+    thumbnail=GroupIconPath
+    )
+print(f"Group '{newGroup.title}' created!")
 
 # ADD USERS
-groupUsers = ['mark_dev', 'maarten_dev','DevDayUser']
-print("adding users to group")
+groupUsers = ['mholtslag_esrinl_events', 'mvanhulzen_esrinl_events']
+print("Adding users to group")
 usersAdded = newGroup.add_users(groupUsers)
 if len(usersAdded['notAdded']) > 0:
     for i, notAddedUser in enumerate(usersAdded['notAdded']):
-        print(f"{notAddedUser} was not added: ")#{usersAdded['notAddedDetails'][i]['error']['message']}")
+        print(f"{notAddedUser} was not added: ")
 
 for user in groupUsers:
     if user not in usersAdded['notAdded']:
         print(f"User '{user}' was successfully added to the group.")
 
-
 # CHANGE DESCRIPTION
 descriptionUpdated = newGroup.update(description='You are really not allowed to leave this group...')
 print(f"Update result: {descriptionUpdated}")
-
-# CHANGE ICON
-groupIconPath = r"D:\Data\Group_Image.png"
-iconUpdated = newGroup.update(thumbnail=groupIconPath)
-print(f"Icon Update result: {iconUpdated}")
 
 print("Script complete")

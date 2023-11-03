@@ -36,4 +36,13 @@ for item in itemsToRemove:
     result = item.delete()
     print(f"deleteresult: {result}")
 
+#Remove Created Group
+print("Searching for groups")
+foundGroups = gis.groups.search(query='tags:"DevSummit2023"')
+print(f"found: {len(foundGroups)}")
+for demogroup in foundGroups:
+    print(f"Deleting group: {demogroup.title}")
+    result = demogroup.delete()
+    print(f"Delete result: {result}")
+
 print("Script complete")
