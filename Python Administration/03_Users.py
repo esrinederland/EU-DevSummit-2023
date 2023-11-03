@@ -25,5 +25,4 @@ print(newUser)
 print("Updating user thumbnail")
 newUser.update(thumbnail = UserImage)
 
-
 print("Script complete")

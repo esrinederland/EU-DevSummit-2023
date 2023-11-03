@@ -12,20 +12,22 @@ print("Successfully logged into '{}' via the '{}' user".format(gis.properties.po
 ux = gis.admin.ux
 
 # CHANGE HOMEPAGE TITLE
-newTitle = "DevTeam Server [Esri GISTech 2023]"
+newTitle = "DevTeam Server [European DevSummit 2023]"
 ux.homepage_settings.set_title(newTitle)
 print(f"Home page title updated to {newTitle}")
 
+# CHANGE HOMEPAGE BACKGROUND
 filename = Path(r'D:\Data\background.jpg')
 if filename.exists():
-    print(gis.admin.ux.set_background(background_file=filename))
+    print(ux.homepage_settings.set_background(background_file=filename))
 else:
-    print("file not exists!")
+    print("file does not exist!")
 
-# CHANGE PORTAL TITLE
-# sign in to dashboard using incognito: https://devteam.esri.nl/portal/apps/dashboards/home
-
+# CHANGE PORTAL NAME
 editDatTime = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-gis.admin.ux.name = f"Our Fabulous portal {editDatTime}"
+ux.name = f"Our Fabulous portal {editDatTime}"
 
-# sign in to dashboard using incognito: https://devteam.esri.nl/portal/apps/dashboards/home
+# SET INFORMATINONAL BANNER
+ux.security_settings.set_informational_banner(text=f"Information: This Portal's look and feel was updated on {editDatTime}", bg_color="white", enabled=True)
+
+print("Script complete")

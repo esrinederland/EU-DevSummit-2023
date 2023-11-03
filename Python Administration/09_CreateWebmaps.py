@@ -4,10 +4,10 @@ from Settings import PortalUrl,ProfileName, EarthquakeRenderer
 gis = arcgis.GIS(PortalUrl, profile=ProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username))
 
-#get featurelayer
+# GET FEATURE LAYER
 layer = gis.content.get("5da9f6e8810741d7859491c32f1b46be").layers[0]
 
-#get unique values
+# GET UNIQUE VALUES
 uniqueValues = layer.get_unique_values("year")
 
 print(f"Found: {len(uniqueValues)} unique values")
@@ -15,14 +15,15 @@ uniqueValues.sort(reverse=True)
 counter = 0
 for unique in uniqueValues:
     counter += 1
+
+    # CREATE A NEW WEBMAP
     print(f"Creating webmap for {unique} ({counter}/{len(uniqueValues)}))")
 
     sql_expression = f"year = {unique}"
 
-    wm = arcgis.mapping.WebMap()  # new web map
+    wm = arcgis.mapping.WebMap()
 
     wm.basemap = "streets-night-vector"
-
     wm.add_layer(
         layer,
         options= {
@@ -30,6 +31,7 @@ for unique in uniqueValues:
         "renderer": EarthquakeRenderer
     })
 
+    # SET DEFINITION EXPRESSION
     wm.layers[0].layerDefinition.definitionExpression = sql_expression
 
     # SAVE THE WEBMAP

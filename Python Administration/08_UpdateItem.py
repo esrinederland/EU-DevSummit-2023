@@ -21,7 +21,7 @@ fieldIDX = {
 layer.manager.add_to_definition({"indexes": [fieldIDX]})
 print(f"Added unique index to field '{matchingField}'")
 
-# UPDATE ITEM FROM CSV
+# ADD CSV TO USE FOR UPDATE
 fileFolder = r"D:\Data"
 fileName = "earthquakes_5.5.csv"
 fileType = "CSV"
@@ -38,6 +38,7 @@ print(f"The item '{fileName}' was added to your portal with itemID: '{csvItem.it
 
 csvInfo = gis.content.analyze(item=csvItem.itemid, file_type="csv", location_type="coordinates")
 
+# UPDATE FEATURE SERVICE FROM CSV
 print(f"BEFORE APPEND: Layer contains {layer.query(return_count_only=True)} features")
 layer.append(
     item_id=csvItem.itemid,

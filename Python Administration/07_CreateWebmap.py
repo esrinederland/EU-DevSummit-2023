@@ -8,12 +8,11 @@ print("Successfully logged into '{}' via the '{}' user".format(gis.properties.po
 
 # CREATE WEBMAP
 print("Creating a webmap")
-wm = arcgis.mapping.WebMap()  # new web map
+wm = arcgis.mapping.WebMap()
 
+# ADD BASEMAP AND LAYER
 wm.basemap = "streets-night-vector"
-
 layer = gis.content.get("5da9f6e8810741d7859491c32f1b46be").layers[0]
-                
 wm.add_layer(
     layer,
     options= {
