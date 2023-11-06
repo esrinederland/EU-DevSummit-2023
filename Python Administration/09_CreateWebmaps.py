@@ -10,6 +10,7 @@ collaboration = [collab for collab in gis.admin.collaborations.list() if "EsriNL
 collaboration.sync(
     workspace_id=collaboration.workspaces[0]["id"]
 )
+print(f"Sync result is: {syncresult}")
 
 # GET FEATURE LAYER
 layer = gis.content.search("type:'Feature Service' tags:earthquakes,DevSummit2023")[0].layers[0]
