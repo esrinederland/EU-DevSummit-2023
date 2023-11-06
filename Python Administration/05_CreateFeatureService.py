@@ -9,6 +9,7 @@ gis = arcgis.GIS(AgolUrl, profile=AgolProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username)) 
 
 # ADD ITEM
+print("Adding CSV to your portal")
 fileFolder = r"D:\Data"
 fileName = "earthquakes2023.csv"
 fileType = "CSV"

@@ -8,6 +8,7 @@ gis = arcgis.GIS(AgolUrl, profile=AgolProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username)) 
 
 # CREATE A NEW GROUP
+print("Creating new group")
 GroupTitle = "Doomed To Stay"
 GroupDescription = "This is a group created for the 2023 DevSummit. The word is: DevSummit"
 GroupTags = "DevSummit2023, Demo, NoLeaving"

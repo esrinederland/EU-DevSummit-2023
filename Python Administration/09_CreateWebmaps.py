@@ -7,7 +7,7 @@ print("Successfully logged into '{}' via the '{}' user".format(gis.properties.po
 # SYNC COLLABORATION
 print("Syncing collaboration")
 collaboration = [collab for collab in gis.admin.collaborations.list() if "EsriNL Events + EsriNL DevTeam" in collab.name][0]
-collaboration.sync(
+syncresult = collaboration.sync(
     workspace_id=collaboration.workspaces[0]["id"]
 )
 print(f"Sync result is: {syncresult}")
@@ -26,12 +26,10 @@ for unique in uniqueValues:
 
     # CREATE A NEW WEBMAP
     print(f"Creating webmap for {unique} ({counter}/{len(uniqueValues)}))")
-
-    sql_expression = f"year = {unique}"
-
     wm = arcgis.mapping.WebMap()
 
-    wm.basemap = "streets-night-vector"
+    # ADD BASEMAP AND LAYER
+    wm.basemap = "dark-gray-vector"
     wm.add_layer(
         layer,
         options= {
@@ -40,15 +38,23 @@ for unique in uniqueValues:
     })
 
     # SET DEFINITION EXPRESSION
+    sql_expression = f"year = {unique}"
     wm.layers[0].layerDefinition.definitionExpression = sql_expression
 
     # SAVE THE WEBMAP
+    extent = layer.query(where=sql_expression,return_extent_only = True, out_sr=4326)
     webmap_item_properties = {'title':f'Earthquakes with magnitude above 5.5 in {unique}',
                 'snippet':'Map created using Python API',
-                'tags':['automation', 'python', "DevSummit2023"]}
+                'tags':['automation', 'python', "DevSummit2023"],
+                'extent': extent['extent']}
 
     print("Saving the webmap")
     new_wm_item = wm.save(webmap_item_properties, thumbnail=r'D:\Data\WebMap_Icon.png')
     print(f"Created item with id: {new_wm_item.id}")
+
+    # SHARE THE WEBMAP WITH THE COLLABORATION
+    print("Sharing webmap with collaboration")
+    collaborationGroupID = collaboration.workspaces[0]["participantGroupLinks"][0]["portalGroupId"]
+    new_wm_item.share(groups=[collaborationGroupID])
 
 print("Script complete")
