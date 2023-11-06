@@ -28,19 +28,13 @@ addedItem = gis.content.add(
     )
 print(f"The item '{fileName}' was added to your portal with itemID: '{addedItem.itemid}'")
 
-# csvInfo = gis.content.analyze(
-#     item=addedItem.itemid, 
-#     file_type="csv", 
-#     location_type="coordinates"
-#     )
-# csvInfo["publishParameters"]["layerInfo"]["capabilities"] = "Create,Delete,Query,Update,Editing,Sync"
-
 # PUBLISH AS FEATURE SERVICE
 publishedItem = addedItem.publish(
-    # publish_parameters=csvInfo['publishParameters'],
     overwrite=True, 
     file_type="csv"
     )
+
+# ENABLE SYNC
 publishedItem.layers[0].manager.add_to_definition({"capabilities": "Create,Delete,Query,Update,Editing,Sync"})
 flCollection = arcgis.features.FeatureLayerCollection.fromitem(publishedItem)
 flCollection.manager.update_definition({"syncEnabled":True})

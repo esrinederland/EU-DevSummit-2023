@@ -4,8 +4,15 @@ from Settings import PortalUrl,ProfileName, EarthquakeRenderer
 gis = arcgis.GIS(PortalUrl, profile=ProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gis.properties.portalHostname,gis.properties.user.username))
 
+# SYNC COLLABORATION
+print("Syncing collaboration")
+collaboration = [collab for collab in gis.admin.collaborations.list() if "EsriNL Events + EsriNL DevTeam" in collab.name][0]
+collaboration.sync(
+    workspace_id=collaboration.workspaces[0]["id"]
+)
+
 # GET FEATURE LAYER
-layer = gis.content.get("5da9f6e8810741d7859491c32f1b46be").layers[0]
+layer = gis.content.search("type:'Feature Service' tags:earthquakes,DevSummit2023")[0].layers[0]
 
 # GET UNIQUE VALUES
 uniqueValues = layer.get_unique_values("year")
