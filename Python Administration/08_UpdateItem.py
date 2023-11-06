@@ -11,23 +11,10 @@ print("Successfully logged into '{}' via the '{}' user".format(gis.properties.po
 # GET THE LAYER TO UPDATE
 layer = gis.content.search("type:'Feature Service' tags:earthquakes,DevSummit2023")[0].layers[0]
 
-# ADD UNIQUE INDEX TO 'id' FIELD
-matchingField = "id"
-fieldIDX = {
-    "name": "c_id",
-    "fields": matchingField,
-    "isAscending": True,
-    "isUnique": True,
-    "description": "index_id"
-    }
-layer.manager.add_to_definition({"indexes": [fieldIDX]})
-print(f"Added unique index to field '{matchingField}'")
-
 # ADD CSV TO USE FOR UPDATE
 fileFolder = r"D:\Data"
-fileName = "earthquakes.csv"
+fileName = "earthquakesHistory.csv"
 fileType = "CSV"
-
 filePath = os.path.join(fileFolder, fileName)
 title = os.path.splitext(fileName)[0]
 itemProperties={'type':fileType,
@@ -51,9 +38,7 @@ print(f"BEFORE APPEND: Layer contains {layer.query(return_count_only=True)} feat
 layer.append(
     item_id=csvItem.itemid,
     upload_format="csv",
-    source_info=csvInfo['publishParameters'],
-    upsert=True,
-    upsert_matching_field=matchingField
+    source_info=csvInfo['publishParameters']
     )
 print(f"AFTER APPEND: Layer contains {layer.query(return_count_only=True)} features")
 
