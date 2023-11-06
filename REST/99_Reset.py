@@ -8,7 +8,8 @@ def main():
     #delete group
     RemoveGroups(token)
 
-    #create user
+    #create user and reassign items
+    createUserAndReassignItems(token)
     EmptySurveyResultsService(token)
     #add content
 
@@ -99,6 +100,25 @@ def searchPortalItems(wherestring, token, start=1):
         print("No results for wherestring: {}".format(wherestring))
     return returnResults
 
+def createUserAndReassignItems(token):
+    ## User settings
+    inviteParams = {"invitationList":'{"invitations":[{"email":"mholtslag@esri.nl","firstname":"Student","lastname":"Intern","username":"intern_esrinl_events","password":"intern_esrinl_events0","role":"xFfw0BwQVw0N6Yj4","userLicenseType":"creatorUT","fullname":"Student Intern","userType":"arcgisonly","groups":"","userCreditAssignment":500,"applyActUserDefaults":False}]}'}
+    inviteUrl = f"https://www.arcgis.com/sharing/rest/portals/self/invite?f=json&token={token}"
+
+    r = requests.post(inviteUrl, inviteParams)
+    print(r.text)
+
+    ## Reassign items
+    itemIDs = "2f05a537faea4b24b62b09724381235b"
+    reassignParams = {
+        "items": itemIDs,
+        "targetUsername": "intern_esrinl_events",
+        "targetFoldername": "intern_esrinl_events"
+    }
+    reassignUrl = f"https://www.arcgis.com/sharing/rest/content/users/archief_esrinl_events/reassignItems?f=json&token={token}"
+
+    r = requests.post(reassignUrl, reassignParams)
+    print(r.text)
 
 if __name__ == '__main__':
     main()
