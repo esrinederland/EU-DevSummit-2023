@@ -7,7 +7,7 @@ print("Successfully logged into '{}' via the '{}' user".format(gis.properties.po
 # SYNC COLLABORATION
 print("Syncing collaboration")
 collaboration = [collab for collab in gis.admin.collaborations.list() if "EsriNL Events + EsriNL DevTeam" in collab.name][0]
-collaboration.sync(
+syncresult = collaboration.sync(
     workspace_id=collaboration.workspaces[0]["id"]
 )
 print(f"Sync result is: {syncresult}")
@@ -25,13 +25,13 @@ for unique in uniqueValues:
     counter += 1
 
     # CREATE A NEW WEBMAP
-    print(f"Creating webmap for {unique} ({counter}/{len(uniqueValues)}))")
+    print(f"Creating webmap for {unique} ({counter}/{len(uniqueValues)})")
 
     sql_expression = f"year = {unique}"
 
     wm = arcgis.mapping.WebMap()
 
-    wm.basemap = "streets-night-vector"
+    wm.basemap = "dark-gray-vector"
     wm.add_layer(
         layer,
         options= {
