@@ -88,7 +88,7 @@ def SentColor():
 	try:
 		text = f"sending  {color}"
 		logging.info(text)
-		sense.show_message(text, text_colour=colornames[color])
+		sense.show_message(text,0.07, text_colour=colornames[color])
 		
 		#query feature for its objectid
 		queryParams = {"f":"json","where":"1=1","outFields":"*"}
@@ -101,13 +101,16 @@ def SentColor():
 		logging.info(feature)
 		#updating feature
 		feature["attributes"]["color"] = color
+		feature["attributes"]["color_count"] = feature["attributes"]["color_count"] + 1
 		updateParams = {"f":"json","features":json.dumps([feature])}
 		updateUrl = f"{fsUrl}/updateFeatures"
 		
 		r = requests.post(updateUrl,updateParams)
 		logging.info(r.text)
 		results = r.json()
-		text = f"results: {results['success']}"
+		
+		#{"updateResults":[{"objectId":1,"uniqueId":1,"globalId":null,"success":true}]}
+		text = f"results: {results['updateResults'][0]['success']}"
 
 		sense.show_message(text, text_colour=colornames[color])
 	except:
