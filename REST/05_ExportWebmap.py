@@ -2,7 +2,7 @@ import Settings
 import requests
 import json
 
-webmapID = "80f4b12575d045ee96ec7bc8b3299f0f"
+webmapID = "52f017f8cbcd4334a23726fd40aa3064"
 
 # generate token
 token = Settings.GenerateToken()
@@ -13,6 +13,10 @@ webmapUrl = f"https://www.arcgis.com/sharing/rest/content/items/{webmapID}/data?
 print("Retrieving WebMap data")
 r = requests.get(webmapUrl)
 webmapData = r.json()
+
+# add token to operational layers
+for layer in webmapData["operationalLayers"]:
+    layer["token"] = token
 
 # Web_Map_as_JSON
 webmapAsJson = {
