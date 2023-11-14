@@ -182,8 +182,8 @@
           esriRequest(url, options).then(function (response) {
             console.log("response", response);
             for (const group of response.data.results){
-            resultsDiv.innerHTML += "<div style='display:table-column;float:left;width:200px;height:200px'>" + 
-                                    "<img src='https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups/" + group.id + "/info/" + group.thumbnail + "?token=" + tokenInput.value + "'></img>" + 
+            resultsDiv.innerHTML += "<div style='display:table-column;float:left;width:200px;heigth:200px'>" + 
+                                    "<img style='width:200px;heigth:200px' src='https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups/" + group.id + "/info/" + group.thumbnail + "?token=" + tokenInput.value + "'></img>" + 
                                     "<h2>" + group.title + "</h2>" + group.description + "</div>"
           }
           resultsDiv.innerHTML += "</div></div>";
