@@ -6,7 +6,7 @@
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
     <title>
-      getGroupies
+      Get groupies
     </title>
 
     <script src="https://js.arcgis.com/calcite-components/1.2.0/calcite.esm.js" type="module"></script>
@@ -109,7 +109,7 @@
         
         const info = new OAuthInfo({
           // Swap this ID out with registered application ID
-          appId: "SWV84jqufujzTid8",
+          appId: "7XaGJIfz3OIrvKCR", //app id from mvanhulzenportal_admin
           // Uncomment the next line and update if using your own portal
           // portalUrl: "https://<host>:<port>/arcgis"
           // Uncomment the next line to prevent the user's signed in state from being shared with other apps on the same domain with the same authNamespace value.
@@ -170,7 +170,7 @@
         const options = {
           query: {
             f: "json",
-            q: 'owner:giemdev AND tags:ShowMeTheGroupies',
+            q: 'owner:mvanhulzenportal_admin AND tags:ShowMeTheGroupies',
             num: 100,
             token: tokenInput.value
           },
@@ -182,8 +182,8 @@
           esriRequest(url, options).then(function (response) {
             console.log("response", response);
             for (const group of response.data.results){
-            resultsDiv.innerHTML += "<div style='display:table-column;float:left;width:200px;height:200px'>" + 
-                                    "<img src='https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups/" + group.id + "/info/" + group.thumbnail + "?token=" + tokenInput.value + "'></img>" + 
+            resultsDiv.innerHTML += "<div style='display:table-column;float:left;width:200px;heigth:200px'>" + 
+                                    "<img style='width:200px;heigth:200px' src='https://" + portalName.value + ".maps.arcgis.com/sharing/rest/community/groups/" + group.id + "/info/" + group.thumbnail + "?token=" + tokenInput.value + "'></img>" + 
                                     "<h2>" + group.title + "</h2>" + group.description + "</div>"
           }
           resultsDiv.innerHTML += "</div></div>";
