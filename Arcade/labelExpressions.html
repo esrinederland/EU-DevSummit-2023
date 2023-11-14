@@ -1,41 +1,232 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Intro to MapView - Create a 2D map</title>
-    <style>
-      html,
-      body,
-      #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.27/"></script>
-    <script>
-      require(["esri/Map", "esri/views/MapView"], (Map, MapView) => {
-        const map = new Map({
-          basemap: "topo-vector"
-        });
-        const view = new MapView({
-          container: "viewDiv", // Reference to the view div created in step 5
-          map: map, // Reference to the map object created before the view
-          zoom: 11, // Sets zoom level based on level of detail (LOD)
-          center: [6.1, 52.5] // Sets center point of view using longitude,latitude
-        });
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Arcade Labels</title>
+  <style>
+    html,
+    body,
+    #mapDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #header {
+      padding-left: 10px;
+      padding-top: 7px;
+      background-color: var(--calcite-ui-brand);
+      border-bottom: solid 1px var(--calcite-ui-brand-press);
+      color: var(--calcite-ui-foreground-3);
+      margin-top: -17px;
+    }
+
+    #footer {
+      padding: 10px 5px 10px 5px;
+      background-color: var(--calcite-ui-background);
+      border-top: solid 1px var(--calcite-ui-border-1);
+
+    }
+
+    .esri-logo {
+      margin: 0.375 rem;
+      content: "";
+      display: inline-block;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: transparent;
+      min-height: 30px;
+      min-width: 70px;
+      line-height: 0;
+      background-size: 100% 100%;
+      background-image: url(images/esri-logo.svg);
+    }
+
+
+    /*Remove the black bar from the map*/
+    .mapDiv .esri-view-surface:focus::after {
+      outline: auto 0px !important;
+    }
+
+    /*
+        * Hide the default Powered by Esri text
+        */
+    .esri-attribution__powered-by {
+      display: none;
+    }
+
+    /*
+        * Style the node.
+        */
+    .esri-powered-by__text {
+      display: none;
+    }
+
+    .esri-powered-by,
+    .esri-powered-by__image {
+      display: block;
+      width: 59px;
+      height: 35px;
+    }
+
+    .info-container {
+
+      width: 500px;
+    }
+
+    .editor-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      height: 300px;
+      min-height: 400px;
+    }
+
+    arcgis-arcade-editor {
+      max-width: 100%;
+    }
+  </style>
+  <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.28/"></script>
+
+  <!-- Load the Coding Components -->
+  <link rel="stylesheet" type="text/css"
+    href="https://js.arcgis.com/coding-components/4.28/arcgis-coding-components.css" />
+  <script type="module" src="https://js.arcgis.com/coding-components/4.28/arcgis-coding-components.esm.js"></script>
+  <script>
+    require(["esri/WebMap", "esri/views/MapView", "esri/widgets/Legend", "esri/widgets/Expand"], (WebMap, MapView, Legend, Expand) => {
+      const map = new WebMap({
+        portalItem: { id: "c466247913214b25a03c0a9cdf07af0e" }
+
       });
-    </script>
-  </head>
-  <body>
-    <calcite-shell>
-        <calcite-shell-panel slot="header" style="background-color: brown;"><div>asdfasdf</div></calcite-shell-panel>
-    <div id="viewDiv"></div>
-</calcite-shell>
-  </body>
+      const view = new MapView({
+        container: "mapDiv",
+        map: map
+      });
+      var powered_by = document.getElementById('esri-powered-by-widget');
+      view.ui.add(powered_by, 'bottom-right');
+      let legend = new Legend({
+        view: view
+      });
+      view.ui.add(new Expand({ content: document.getElementById("info-panel"), expanded: true, expandIcon: "label" }), "top-right");
+      view.ui.add(new Expand({ content: legend, expanded: true }), "bottom-left");
+
+
+
+      const arcadeEditorElt = document.querySelector("arcgis-arcade-editor");
+      view.when(() => {
+
+        var fl = view.map.layers.find((x) => x.title == "World Cities");
+        //set 
+        fl.outFields = ["*"];
+        fl.queryFeatures().then((results) => {
+          console.log("results: " + JSON.stringify(results));
+          var testfeature = results.features[0];
+
+          arcadeEditorElt.profile = {
+            id: "labeling",
+            definitions: {
+              $feature: fl
+            }
+          };
+          arcadeEditorElt.testData = {
+            profileVariableInstances: {
+              $feature: testfeature
+            }
+          }
+        });
+
+      });
+      document.getElementById("label-switch").addEventListener("calciteSwitchChange", () => {
+        SetLabels();
+      });
+      document.getElementById("set-label-button").addEventListener("click", () => {
+        SetLabels();
+      });
+      async function SetLabels() {
+        console.log("Setting labels")
+
+        console.log("finding layer")
+
+        var fl = view.map.layers.find((x) => x.title == "World Cities");
+
+        var labelSwitch = document.getElementById("label-switch");
+        var labelsEnabled = labelSwitch.checked;
+
+        console.log("labelsEnabled: " + labelsEnabled);
+        fl.labelsVisible = labelsEnabled;
+        if (labelsEnabled) {
+
+          var script = await arcadeEditorElt.getScript();
+          expression = script;
+
+          if (expression == "") {
+            expression = "$feature.OBJECTID";
+          }
+
+          var labelClass = {
+            labelExpressionInfo: { expression: expression },
+            symbol: {
+              type: "text",  // autocasts as new TextSymbol()
+              color: "black",
+              haloSize: 1,
+              haloColor: "white"
+            }
+          };
+          fl.labelingInfo = [labelClass];
+
+        }
+      }
+
+    });
+  </script>
+</head>
+
+<body>
+  <calcite-shell content-behind>
+    <div slot="header" id="header">
+      <h2>Arcade: Setting labels</h2>
+    </div>
+    <div id="mapDiv"></div>
+    <calcite-panel height-scale="l" width-scale="m" data-panel-id="info" id="info-panel" heading="Set Labels">
+      <div id="info-container" class="info-container" style="padding: 1rem;">
+        <div id="button-container">
+          <calcite-label>Labels On / Off:
+            <calcite-switch id="label-switch" scale="l">
+            </calcite-switch>
+          </calcite-label>
+
+          <div class="editor-wrapper">
+            <arcgis-arcade-editor />
+          </div>
+          <calcite-button id="set-label-button" scale="l" width="full">Set Label
+          </calcite-button>
+
+        </div>
+      </div>
+    </calcite-panel>
+    <!-- custom footer for the shell -->
+    <div slot="footer" id="footer">
+      <div class="esri-logo"></div>
+    </div>
+
+
+  </calcite-shell>
+  <!-- This node will be retrieved and added to the view. -->
+  <div class="esri-powered-by-widget" id="esri-powered-by-widget">
+    <a class="esri-powered-by" href="http://esri.com" target="_blank" title="Powered 
+by Esri." aria-label="Powered by Esri. Visit to esri.com in a new window.">
+      <span class="esri-powered-by__text">Powered by Esri</span>
+      <img class="esri-powered-by__image" src="images/powered_by_esri_logo.svg" alt="Esri L
+ogo" aria-label="Esri logo">
+    </a>
+  </div>
+</body>
+
 </html>

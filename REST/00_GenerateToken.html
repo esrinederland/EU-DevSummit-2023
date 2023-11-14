@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Rest: Generate Token</title>
+    <style>
+        html,
+        body,
+        #mapDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        #header {
+            padding-left: 10px;
+            padding-top: 7px;
+            background-color: var(--calcite-ui-brand);
+            border-bottom: solid 1px var(--calcite-ui-brand-press);
+            color: var(--calcite-ui-foreground-3);
+            margin-top: -17px;
+        }
+
+        #footer {
+            padding: 10px 5px 10px 5px;
+            background-color: var(--calcite-ui-background);
+            border-top: solid 1px var(--calcite-ui-border-1);
+
+        }
+
+        .esri-logo {
+            margin: 0.375 rem;
+            content: "";
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: transparent;
+            min-height: 30px;
+            min-width: 70px;
+            line-height: 0;
+            background-size: 100% 100%;
+            background-image: url(images/esri-logo.svg);
+        }
+
+        #info-panel {
+            width: 400px;
+        }
+
+        .esri-input {
+            width: 100%;
+            
+        }
+    </style>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.28/"></script>
+
+    <!-- Load the Coding Components -->
+    <link rel="stylesheet" type="text/css"
+        href="https://js.arcgis.com/coding-components/4.28/arcgis-coding-components.css" />
+    <script type="module" src="https://js.arcgis.com/coding-components/4.28/arcgis-coding-components.esm.js"></script>
+    <script>
+    </script>
+</head>
+
+<body>
+    <calcite-shell content-behind>
+        <div slot="header" id="header">
+            <h2>Rest: Generate Token</h2>
+        </div>
+
+        <calcite-panel height-scale="l" width-scale="m" data-panel-id="info" id="info-panel" heading="Generate Token">
+            <div id="info-container" class="info-container" style="padding: 1rem;">
+                <form action="https://www.arcgis.com/sharing/generateToken" method="POST" >
+                    <div>
+
+                        Username<br />
+                        <input type="text" name="username" placeholder="username" value="mvanhulzen_esrinl"
+                            class="esri-input">
+                        <br />
+
+                        Password<br />
+                        <input type="password" name="password" placeholder="password" class="esri-input" autocomplete="off"><br />
+
+
+                        Referer<br />
+                        <input type="text" name="referer" value="https://localhost" class="esri-input" /><br />
+
+
+                        <input type="submit" value="generate" class="esri-button">
+                    </div>
+                    <input type="hidden" name="f" value="pjson" />
+                    <input type="hidden" name="expiration" value="60" />
+
+                </form>
+            </div>
+        </calcite-panel>
+        <!-- custom footer for the shell -->
+        <div slot="footer" id="footer">
+            <div class="esri-logo"></div>
+        </div>
+
+
+    </calcite-shell>
+    <!-- This node will be retrieved and added to the view. -->
+    <div class="esri-powered-by-widget" id="esri-powered-by-widget">
+        <a class="esri-powered-by" href="http://esri.com" target="_blank" title="Powered 
+by Esri." aria-label="Powered by Esri. Visit to esri.com in a new window.">
+            <span class="esri-powered-by__text">Powered by Esri</span>
+            <img class="esri-powered-by__image" src="images/powered_by_esri_logo.svg" alt="Esri L
+ogo" aria-label="Esri logo">
+        </a>
+    </div>
+</body>
+
+</html>

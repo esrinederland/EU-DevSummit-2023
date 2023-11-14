@@ -10,7 +10,7 @@ def main():
 
     #create user and reassign items
     createUserAndReassignItems(token)
-
+    EmptySurveyResultsService(token)
     #add content
 
     #delete webmap
@@ -18,8 +18,18 @@ def main():
     #delete features from surveyservice
 
     #
+    RemoveOprahResults06(token)
 
     print("Script complete")
+
+
+def EmptySurveyResultsService(token):
+    #delete features from surveyservice
+    print("EmptySurveyResultsService")
+    surveyServiceUrl = "https://services9.arcgis.com/7e6lF03RcLhwFtm5/arcgis/rest/services/survey123_d4b3ab2513384ea48ae3cb62a9e0e5df_form/FeatureServer/0/deleteFeatures"
+    params = {'token':token,'f':'json','where':'1=1'}
+    r = requests.post(surveyServiceUrl,params)
+    print(r.text)
 
 def RemoveGroups(token):
     #remove 4 groups
@@ -46,7 +56,7 @@ def RemoveOprahResults06(token):
     ##Demo 14 Oprah
     print("Remove Webmaps")
     #items = searchPortalItems(f"type:Web Map AND tags:{tags} AND owner:{Security.GetUsername()}",token)
-    items = searchPortalItems(f"tags:{tags} AND owner:{Security.GetUsername()}",token)
+    items = searchPortalItems(f"tags:{tags} AND owner:{Settings.Username}",token)
     print("nrof items found: {}".format(len(items)))
     counter = 0
     for item in items:
@@ -58,7 +68,7 @@ def RemoveOprahResults06(token):
         )
 
         url = "https://www.arcgis.com/sharing/rest/content/users/{}/items/{}/delete?f=json&token={}".format(
-            Security.GetUsername(), item["id"], token
+            Settings.Username, item["id"], token
         )
 
         # dummy params to force post

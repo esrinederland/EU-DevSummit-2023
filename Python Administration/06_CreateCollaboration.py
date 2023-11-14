@@ -1,5 +1,7 @@
+##### ARCGIS ONLINE #####
+
 import arcgis
-from Settings import AgolUrl,AgolProfileName, PortalUrl, ProfileName
+from Settings import AgolUrl,AgolProfileName,PortalUrl,ProfileName
 
 gisAgol = arcgis.GIS(AgolUrl, profile=AgolProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gisAgol.properties.portalHostname,gisAgol.properties.user.username))
@@ -7,26 +9,43 @@ print("Successfully logged into '{}' via the '{}' user".format(gisAgol.propertie
 gisEnterprise = arcgis.GIS(PortalUrl, profile=ProfileName)
 print("Successfully logged into '{}' via the '{}' user".format(gisEnterprise.properties.portalHostname,gisEnterprise.properties.user.username))
 
-
-### Create a collaboration ###
-# Collaboration properties
+# COLLABORATION PROPERTIES
 collaborationName = "EsriNL Events + EsriNL DevTeam"
 collaborationDescription = "Data sharing initiative between EsriNL Events and EsriNL DevTeam"
 
-# Create collaboration
-collaborationCreated = gisAgol.admin.collaborations.collaborate_with(gisEnterprise, collaborationName, collaborationDescription)
+# CREATE COLLABORATION
+collaborationCreated = gisAgol.admin.collaborations.collaborate_with(
+    guest_gis=gisEnterprise, 
+    collaboration_name=collaborationName, 
+    collaboration_description=collaborationDescription
+    )
 
-if collaborationCreated:
-    
-    # Get collaboration
-    collaboration = [collab for collab in gisEnterprise.admin.collaborations.list() if collaborationName in collab.name][0]
-    print(f"Successfully created collaboration '{collaboration.name}'")
+# GET COLLABORATION
+collaboration = [collab for collab in gisAgol.admin.collaborations.list() if collaborationName in collab.name][0]
+print(f"Successfully created collaboration '{collaboration.name}'")
 
-    # Get collaboration group on Enterprise portal to share Items
-    collaborationGroupID = collaboration.workspaces[0]["participantGroupLinks"][0]["portalGroupId"]
+collaborationWorkspaceID = collaboration.workspaces[0]["id"]
+collaborationGroupID = collaboration.workspaces[0]["participantGroupLinks"][0]["portalGroupId"]
+collaborationGroupName = collaboration.workspaces[0]["participantGroupLinks"][0]["portalGroupName"]
 
-    # Share a list of Items with the collaboration group
-    items = ["aacd190707e94fc285215b77f35427a5"]
-    sharedItems = gisEnterprise.content.share_items(items, groups=[collaborationGroupID])
+# UPDATE COLLABORATION SETTINGS
+collaboration.update_portal_group_link(
+    workspace_id=collaborationWorkspaceID, 
+    portal_id=collaborationGroupID, 
+    copy_feature_service_data=True
+    )
+collaboration.update_item_delete_policy(
+    participant_id=collaboration["collaborationHostPortalId"], 
+    delete_contributed_items=True, 
+    delete_received_items=True
+    )
+
+# SHARE ITEMS IN COLLABORATION GROUP
+items = gisAgol.content.search("tags:earthquakes,DevSummit2023")
+sharedItems = gisAgol.content.share_items(
+    items=items, 
+    groups=[collaborationGroupID]
+    )
+print(f"Shared {len(sharedItems['results'])} item(s) with the '{collaborationGroupName}' group")
 
 print("Script complete")
